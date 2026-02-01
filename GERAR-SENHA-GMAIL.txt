@@ -1,0 +1,77 @@
+═══════════════════════════════════════════════════════
+  COMO GERAR SENHA DE APP DO GMAIL
+═══════════════════════════════════════════════════════
+
+Para enviar emails reais, você precisa gerar uma "Senha de App"
+do Gmail. Siga estes passos:
+
+PASSO 1: Ativar verificação em 2 etapas
+═══════════════════════════════════════════════════════
+
+1. Acesse: https://myaccount.google.com/security
+2. Procure por "Verificação em duas etapas"
+3. Ative (se ainda não estiver ativo)
+
+
+PASSO 2: Gerar senha de app
+═══════════════════════════════════════════════════════
+
+1. Acesse: https://myaccount.google.com/apppasswords
+
+2. Faça login com: niyonkuruclaudelove@gmail.com
+
+3. Em "Selecionar app", escolha: Outro (nome personalizado)
+
+4. Digite: NC Messenger
+
+5. Clique em "Gerar"
+
+6. COPIE A SENHA de 16 caracteres
+   Exemplo: abcd efgh ijkl mnop
+
+
+PASSO 3: Configurar no arquivo .env
+═══════════════════════════════════════════════════════
+
+1. Abra o arquivo: .env (na pasta do projeto)
+
+2. Encontre a linha:
+   NC_SMTP_PASS=COLE_A_SENHA_AQUI
+
+3. Substitua "COLE_A_SENHA_AQUI" pela senha gerada
+   Exemplo:
+   NC_SMTP_PASS=abcdefghijklmnop
+
+   IMPORTANTE: Cole sem espaços!
+   ERRADO: abcd efgh ijkl mnop
+   CERTO:  abcdefghijklmnop
+
+4. Salve o arquivo
+
+
+PASSO 4: Reiniciar servidor
+═══════════════════════════════════════════════════════
+
+1. Feche o terminal atual (Ctrl+C)
+2. Execute novamente: reiniciar.bat
+3. Agora os emails vão chegar na caixa de entrada!
+
+
+═══════════════════════════════════════════════════════
+  POR ENQUANTO: Use o código que aparece no terminal!
+═══════════════════════════════════════════════════════
+
+O código SEMPRE aparecerá no terminal (janela CMD), mesmo
+sem configurar o email. É mais rápido e funciona sempre!
+
+Procure por:
+
+╔════════════════════════════════════════╗
+║      CÓDIGO DE VERIFICAÇÃO NC          ║
+╠════════════════════════════════════════╣
+║   Email: seu@email.com                 ║
+║   Código: 123456                       ║  ← USE ESTE!
+╚════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════

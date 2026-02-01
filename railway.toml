@@ -1,0 +1,10 @@
+# Railway - NC Messenger
+# Garante build TypeScript e health check correto.
+
+[build]
+buildCommand = "npm run build"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 120
+startCommand = "node dist/server/index.js"

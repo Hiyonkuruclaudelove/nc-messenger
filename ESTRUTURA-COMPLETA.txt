@@ -1,0 +1,204 @@
+═══════════════════════════════════════════════════════════════
+  NC - ESTRUTURA COMPLETA DO PROJETO
+═══════════════════════════════════════════════════════════════
+
+NcApk/                                    [RAIZ DO PROJETO]
+│
+├── 🖥️  SERVIDOR (Backend)                [MANTENHA TUDO!]
+│   │
+│   ├── src/                             ← CÓDIGO DO SERVIDOR
+│   │   ├── db/                          [Banco de dados]
+│   │   │   ├── init.ts                  • Inicialização BD
+│   │   │   ├── schema.ts                • Estrutura tabelas
+│   │   │   ├── users.ts                 • CRUD usuários
+│   │   │   ├── messages.ts              • CRUD mensagens
+│   │   │   ├── sessions.ts              • CRUD sessões
+│   │   │   ├── verifications.ts         • Códigos email
+│   │   │   └── push.ts                  • Push subscriptions
+│   │   │
+│   │   ├── services/                    [Serviços]
+│   │   │   ├── xmpp.ts                  • WebSocket (XMPP)
+│   │   │   ├── email.ts                 • Envio de emails
+│   │   │   ├── push.ts                  • Push notifications
+│   │   │   └── mms.ts                   • Upload arquivos
+│   │   │
+│   │   ├── routes/                      [API REST]
+│   │   │   ├── auth.ts                  • /api/auth/*
+│   │   │   ├── users.ts                 • /api/users/*
+│   │   │   ├── messages.ts              • /api/messages/*
+│   │   │   ├── push.ts                  • /api/push/*
+│   │   │   └── mms.ts                   • /api/mms/*
+│   │   │
+│   │   ├── middleware/                  [Middleware]
+│   │   │   └── auth.ts                  • Autenticação token
+│   │   │
+│   │   └── server/                      [Servidor principal]
+│   │       └── index.ts                 • Express + WebSocket
+│   │
+│   ├── data/                            ← DADOS PERSISTENTES
+│   │   ├── nc.db                        • Banco SQLite
+│   │   └── uploads/                     • Arquivos MMS
+│   │       ├── foto1.jpg
+│   │       ├── video1.mp4
+│   │       └── ...
+│   │
+│   ├── package.json                     [Dependências servidor]
+│   ├── tsconfig.json                    [Config TypeScript]
+│   ├── .env                             [Config ambiente]
+│   ├── reiniciar.bat                    [Iniciar servidor]
+│   └── instalar.bat                     [Instalar deps]
+│
+│
+├── 📱 CLIENTE WEB (Frontend Web)        [SUBSTITUIR POR APP]
+│   │
+│   └── public/                          ← CLIENTE WEB ATUAL
+│       ├── index.html                   • HTML da interface
+│       ├── styles.css                   • Estilos visuais
+│       ├── app.js                       • Lógica cliente
+│       ├── e2e.js                       • Criptografia E2E
+│       └── chat-bg.svg                  • Recursos visuais
+│
+│
+├── 📚 DOCUMENTAÇÃO
+│   ├── README.md                        • Visão geral
+│   ├── PROJETO-COMPLETO.md             • Documentação completa
+│   ├── SERVIDOR-vs-CLIENTE.md          • Explicação separação
+│   ├── GUIA-APP-MOVEL.md               • Criar app móvel
+│   ├── SEPARACAO-SIMPLES.txt           • Resumo visual
+│   ├── ESTRUTURA-COMPLETA.txt          • Este arquivo
+│   ├── INICIAR.md                      • Como usar
+│   ├── COMO-USAR.txt                   • Guia rápido
+│   ├── CONFIGURAR-EMAIL.md             • Config SMTP
+│   └── GERAR-SENHA-GMAIL.txt           • Senha app Gmail
+│
+│
+└── 🔧 ARQUIVOS CONFIG
+    ├── .gitignore                       • Ignorar node_modules
+    ├── verificar-servidor.bat          • Testar servidor
+    └── atualizar-e-iniciar.bat         • Atualizar e rodar
+
+
+═══════════════════════════════════════════════════════════════
+  PARA CRIAR APP MÓVEL
+═══════════════════════════════════════════════════════════════
+
+CRIE UM NOVO PROJETO (fora desta pasta):
+
+nc-mobile/                               [NOVO PROJETO MOBILE]
+│
+├── src/
+│   ├── screens/                         [Telas do app]
+│   │   ├── LoginScreen.js              • Tela de login
+│   │   ├── RegisterScreen.js           • Tela de cadastro
+│   │   ├── HomeScreen.js               • Lista conversas
+│   │   └── ChatScreen.js               • Tela de chat
+│   │
+│   ├── services/                        [Comunicação]
+│   │   ├── api.js                      • HTTP (axios)
+│   │   ├── websocket.js                • WebSocket
+│   │   └── e2e.js                      ← COPIE de public/e2e.js
+│   │
+│   ├── components/                      [Componentes]
+│   │   ├── MessageBubble.js
+│   │   ├── ConversationItem.js
+│   │   └── Avatar.js
+│   │
+│   └── utils/
+│       ├── storage.js                   • AsyncStorage
+│       └── notifications.js             • Push local
+│
+├── App.js                               [App principal]
+├── package.json                         [Dependências mobile]
+└── app.json                             [Config Expo]
+
+
+═══════════════════════════════════════════════════════════════
+  MAPEAMENTO: WEB → MOBILE
+═══════════════════════════════════════════════════════════════
+
+ARQUIVO WEB                     ARQUIVO MOBILE
+─────────────────────────────────────────────────────────────
+
+public/index.html            →  src/screens/*.js
+                                (LoginScreen, HomeScreen, etc)
+
+public/styles.css            →  StyleSheet em cada componente
+                                (inline styles no React Native)
+
+public/app.js                →  src/services/api.js
+                                src/services/websocket.js
+                                Lógica nas screens
+
+public/e2e.js                →  src/services/e2e.js
+                                (COPIAR E ADAPTAR)
+
+
+═══════════════════════════════════════════════════════════════
+  COMUNICAÇÃO CLIENTE ↔ SERVIDOR
+═══════════════════════════════════════════════════════════════
+
+APP MÓVEL (React Native)          SERVIDOR (Node.js)
+────────────────────              ──────────────────
+
+1. Login:
+   LoginScreen.js
+   └─→ api.js
+       └─→ POST /api/auth/login/email  ─────┐
+                                             │
+                                ┌────────────┘
+                                │
+                                ▼
+                          src/routes/auth.ts
+                          └─→ Valida código
+                              └─→ Retorna token
+
+
+2. Mensagem:
+   ChatScreen.js
+   └─→ websocket.js
+       └─→ WS send({type: 'message'})  ─────┐
+                                             │
+                                ┌────────────┘
+                                │
+                                ▼
+                          src/services/xmpp.ts
+                          └─→ Valida destinatário
+                              └─→ Armazena mensagem
+                                  └─→ Entrega ao destinatário
+
+
+═══════════════════════════════════════════════════════════════
+  RESUMO EXECUTIVO
+═══════════════════════════════════════════════════════════════
+
+🖥️  SERVIDOR (src/ + data/)
+    ↓
+    MANTER 100% IGUAL
+    Apenas hospedar em servidor real
+    Código não muda!
+
+📱 CLIENTE (public/ → nc-mobile/)
+    ↓
+    RECRIAR em React Native
+    Mesmo fluxo, nova tecnologia
+    Copiar lógica E2E
+
+💡 DICA
+    ↓
+    O servidor é como uma API
+    O app mobile só consome essa API
+    Como o Instagram: 1 servidor, vários clientes
+
+
+═══════════════════════════════════════════════════════════════
+  PRÓXIMO PASSO
+═══════════════════════════════════════════════════════════════
+
+1. Abra: GUIA-APP-MOVEL.md
+2. Siga passo a passo
+3. Crie projeto React Native
+4. Teste no celular
+5. Desenvolva!
+
+
+═══════════════════════════════════════════════════════════════

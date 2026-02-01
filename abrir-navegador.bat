@@ -1,0 +1,3 @@
+@echo off
+echo Abrindo NC no navegador...
+start http://localhost:3000

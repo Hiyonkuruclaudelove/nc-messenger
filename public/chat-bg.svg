@@ -1,0 +1,12 @@
+<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="chat-pattern" x="0" y="0" width="400" height="400" patternUnits="userSpaceOnUse">
+      <rect fill="#0e1a2f" width="400" height="400"/>
+      <path d="M 50 50 L 100 100 M 150 50 L 200 100 M 250 50 L 300 100" stroke="rgba(255,255,255,0.03)" stroke-width="2" fill="none"/>
+      <circle cx="75" cy="200" r="30" fill="rgba(102, 126, 234, 0.05)"/>
+      <circle cx="300" cy="100" r="40" fill="rgba(102, 126, 234, 0.03)"/>
+      <path d="M 0 300 Q 100 250 200 300 T 400 300" stroke="rgba(255,255,255,0.02)" stroke-width="3" fill="none"/>
+    </pattern>
+  </defs>
+  <rect fill="url(#chat-pattern)" width="100%" height="100%"/>
+</svg>

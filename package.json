@@ -1,0 +1,39 @@
+{
+  "name": "nc-messenger",
+  "version": "1.0.0",
+  "description": "NC - Aplicativo de mensagens instantâneas com XMPP, MMS e Push, criptografia ponta a ponta",
+  "main": "dist/server/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server/index.js",
+    "dev": "ts-node-dev --respawn src/server/index.ts",
+    "db:init": "ts-node src/db/init.ts"
+  },
+  "keywords": ["messenger", "xmpp", "mms", "push", "e2e"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
+    "uuid": "^10.0.0",
+    "web-push": "^3.6.7",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.9.0",
+    "@types/nodemailer": "^6.4.16",
+    "@types/uuid": "^10.0.0",
+    "@types/web-push": "^3.6.3",
+    "@types/ws": "^8.5.13",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
+  }
+}

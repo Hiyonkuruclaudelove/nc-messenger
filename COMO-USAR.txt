@@ -1,0 +1,114 @@
+═══════════════════════════════════════════════════════
+    NC - APLICATIVO DE MENSAGENS INSTANTÂNEAS
+═══════════════════════════════════════════════════════
+
+📦 INSTALAÇÃO (Apenas 1 vez)
+═══════════════════════════════════════════════════════
+
+   1. Clique duplo em: instalar.bat
+   2. Aguarde a instalação terminar
+   3. Pressione qualquer tecla
+
+
+🚀 INICIAR O SERVIDOR
+═══════════════════════════════════════════════════════
+
+   Opção 1: Clique duplo em: iniciar.bat
+            (Abre automaticamente o navegador!)
+
+   Opção 2: Abra o terminal e digite:
+            cd c:\xampp\htdocs\NcApk
+            npm run dev
+
+
+🌐 ACESSAR NO NAVEGADOR
+═══════════════════════════════════════════════════════
+
+   Digite na barra de endereço:
+
+      http://localhost:3000
+
+   Ou clique duplo em: abrir-navegador.bat
+
+
+📝 PRIMEIRO ACESSO (Registro)
+═══════════════════════════════════════════════════════
+
+   1. Digite qualquer email (ex: teste@email.com)
+   2. Clique em "Continuar"
+   3. VEJA O CÓDIGO no terminal (janela preta)
+      
+      ╔════════════════════════════════════════╗
+      ║   CÓDIGO DE VERIFICAÇÃO (DEV MODE)     ║
+      ╠════════════════════════════════════════╣
+      ║   Email: teste@email.com               ║
+      ║   Código: 123456                       ║  ← COPIE ESTE
+      ╚════════════════════════════════════════╝
+
+   4. Cole o código no navegador
+   5. Digite seu nome
+   6. Pronto! 🎉
+
+
+💬 CONVERSAR COM ALGUÉM
+═══════════════════════════════════════════════════════
+
+   1. Copie SEU ID que aparece na tela:
+      "Seu ID para outros te adicionarem: abc-123-..."
+   
+   2. Peça o ID da outra pessoa
+   
+   3. Clique em "Nova conversa"
+   
+   4. Cole o ID da outra pessoa
+   
+   5. Envie mensagens! 🔒 (Criptografadas E2E)
+
+
+🧪 TESTAR SOZINHO (2 usuários)
+═══════════════════════════════════════════════════════
+
+   1. Abra Chrome/Edge normalmente
+      • Cadastre: usuario1@teste.com
+      • Copie o ID do usuário 1
+   
+   2. Abra uma Aba Anônima (Ctrl+Shift+N)
+      • Cadastre: usuario2@teste.com
+      • Clique "Nova conversa"
+      • Cole o ID do usuário 1
+      • Envie uma mensagem!
+   
+   3. Volte na primeira aba
+      • A mensagem aparece em tempo real! ⚡
+
+
+❓ PROBLEMAS?
+═══════════════════════════════════════════════════════
+
+   "Não consigo acessar localhost:3000"
+   → Verifique se o servidor está rodando (iniciar.bat)
+   → Tente fechar e abrir o navegador
+
+   "Código não aparece"
+   → Olhe no terminal/janela preta do iniciar.bat
+
+   "Porta 3000 em uso"
+   → Feche outros programas na porta 3000
+   → Ou mude a porta: set PORT=3001
+
+
+📁 ARQUIVOS IMPORTANTES
+═══════════════════════════════════════════════════════
+
+   instalar.bat       → Instala dependências (1ª vez)
+   iniciar.bat        → Inicia servidor + abre navegador
+   abrir-navegador.bat → Só abre o navegador
+   COMO-USAR.txt      → Este arquivo
+   
+   data/nc.db         → Banco de dados (criado automaticamente)
+   data/uploads/      → Arquivos enviados (fotos, vídeos)
+
+
+═══════════════════════════════════════════════════════
+         Pronto para usar! Execute: iniciar.bat
+═══════════════════════════════════════════════════════
