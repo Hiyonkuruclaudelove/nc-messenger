@@ -42,6 +42,7 @@ router.post('/register/email', async (req: Request, res: Response) => {
   }
   const code = randomCode();
   setVerificationCode(normalized, code);
+  console.log('[auth] Enviando código de verificação para:', normalized);
   const sent = await sendVerificationCode(normalized, code);
   if (!sent) {
     res.status(503).json({ error: 'Falha ao enviar código por email' });
@@ -134,6 +135,7 @@ router.post('/login/send-code', async (req: Request, res: Response) => {
   }
   const code = randomCode();
   setVerificationCode(normalized, code);
+  console.log('[auth] Enviando código de login para:', normalized);
   const sent = await sendVerificationCode(normalized, code);
   if (!sent) {
     res.status(503).json({ error: 'Falha ao enviar código' });

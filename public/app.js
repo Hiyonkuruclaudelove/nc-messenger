@@ -276,6 +276,17 @@ $('form-email')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = $('input-email').value.trim().toLowerCase();
   setError($('form-email'), '');
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    setError($('form-email'), 'Email incompleto. Ex: seuemail@gmail.com');
+    return;
+  }
+  const form = $('form-email');
+  const btn = form?.querySelector('button[type="submit"]');
+  const originalText = btn?.textContent || 'Continuar';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+  }
   try {
     await api('/auth/register/email', { method: 'POST', body: JSON.stringify({ email }) });
     $('code-email').textContent = email;
@@ -285,13 +296,22 @@ $('form-email')?.addEventListener('submit', async (e) => {
     document.body.dataset.flow = 'register';
   } catch (err) {
     if (err.message.includes('já cadastrado')) {
-      await api('/auth/login/send-code', { method: 'POST', body: JSON.stringify({ email }) });
-      $('code-email').textContent = email;
-      $('input-code').value = '';
-      showScreen('screen-code');
-      document.body.dataset.flow = 'login';
+      try {
+        await api('/auth/login/send-code', { method: 'POST', body: JSON.stringify({ email }) });
+        $('code-email').textContent = email;
+        $('input-code').value = '';
+        showScreen('screen-code');
+        document.body.dataset.flow = 'login';
+      } catch (err2) {
+        setError($('form-email'), err2.message || 'Falha ao enviar código. Tente de novo.');
+      }
     } else {
       setError($('form-email'), err.message);
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = originalText;
     }
   }
 });
