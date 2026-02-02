@@ -30,6 +30,8 @@ export function initEmail(config?: {
     port,
     secure: port === 465, // true para 465, false para outras portas
     auth: user ? { user, pass } : undefined,
+    connectionTimeout: 20000, // 20s para evitar ETIMEDOUT em redes lentas (ex: Railway → Resend)
+    greetingTimeout: 15000,
     tls: {
       rejectUnauthorized: false, // Permite certificados auto-assinados
     },
@@ -37,6 +39,42 @@ export function initEmail(config?: {
   });
 
   console.log('✅ SMTP configurado!\n');
+}
+
+/** Envio via API do Resend (HTTPS) - evita ETIMEDOUT do SMTP em ambientes como Railway */
+async function sendViaResendApi(to: string, code: string): Promise<boolean> {
+  const apiKey = process.env.NC_RESEND_API_KEY || process.env.NC_SMTP_PASS;
+  const from = process.env.NC_EMAIL_FROM ?? 'NC <onboarding@resend.dev>';
+  if (!apiKey || !apiKey.startsWith('re_')) {
+    return false;
+  }
+  try {
+    console.log(`📧 Enviando via API Resend para ${to}...`);
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: '[NC] Código de verificação',
+        html: `<p>Seu código de verificação NC é: <strong>${code}</strong></p><p>Válido por 15 minutos.</p>`,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      console.error('❌ Resend API:', res.status, data);
+      return false;
+    }
+    console.log('✅ Email enviado com sucesso (Resend API)!');
+    console.log('   Id:', (data as { id?: string }).id);
+    return true;
+  } catch (e: any) {
+    console.error('❌ Erro Resend API:', e.message);
+    return false;
+  }
 }
 
 export async function sendVerificationCode(
@@ -52,15 +90,27 @@ export async function sendVerificationCode(
   console.log('╚════════════════════════════════════════╝\n');
 
   // Modo desenvolvimento: apenas terminal
-  if (!process.env.NC_SMTP_HOST || process.env.NC_SMTP_PASS === 'COLE_A_SENHA_AQUI') {
-    console.log('ℹ️  Modo DEV: SMTP não configurado. Use o código acima!\n');
-    return true;
+  if (!process.env.NC_SMTP_HOST && !process.env.NC_RESEND_API_KEY) {
+    if (process.env.NC_SMTP_PASS === 'COLE_A_SENHA_AQUI') {
+      console.log('ℹ️  Modo DEV: SMTP não configurado. Use o código acima!\n');
+      return true;
+    }
   }
 
-  // Tentar enviar email
+  // 1) Se tiver chave Resend (re_xxx), usar API (HTTPS) - evita ETIMEDOUT do SMTP
+  const apiKey = process.env.NC_RESEND_API_KEY || process.env.NC_SMTP_PASS;
+  if (apiKey && String(apiKey).startsWith('re_')) {
+    const ok = await sendViaResendApi(to, code);
+    if (ok) return true;
+    console.log('⚠️  Resend API falhou; tentando SMTP...');
+  }
+
+  // 2) SMTP
   if (!transporter) {
-    console.log('⚠️  Transporter não inicializado, inicializando...');
-    initEmail();
+    if (process.env.NC_SMTP_HOST) {
+      console.log('⚠️  Transporter não inicializado, inicializando...');
+      initEmail();
+    }
   }
   if (!transporter) {
     console.error('❌ Falha ao inicializar transporter');
@@ -69,7 +119,7 @@ export async function sendVerificationCode(
   }
 
   try {
-    console.log(`📧 Tentando enviar email para ${to}...`);
+    console.log(`📧 Tentando enviar email (SMTP) para ${to}...`);
     const info = await transporter.sendMail({
       from: process.env.NC_EMAIL_FROM ?? 'NC <noreply@nc.local>',
       to,
@@ -90,6 +140,6 @@ export async function sendVerificationCode(
     if (e.command) console.error('   Comando SMTP:', e.command);
     console.log('\n⚠️  Não foi possível enviar o email.');
     console.log('ℹ️  Use o código mostrado no terminal acima!\n');
-    return false; // Falha real: API vai retornar 503 e o usuário vê "Falha ao enviar código"
+    return false;
   }
 }
