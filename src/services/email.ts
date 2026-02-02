@@ -86,8 +86,10 @@ export async function sendVerificationCode(
     console.error('\n❌ ERRO ao enviar email:');
     console.error('   Mensagem:', e.message);
     if (e.code) console.error('   Código:', e.code);
+    if (e.response) console.error('   Response:', e.response);
+    if (e.command) console.error('   Comando SMTP:', e.command);
     console.log('\n⚠️  Não foi possível enviar o email.');
     console.log('ℹ️  Use o código mostrado no terminal acima!\n');
-    return true; // Retorna true para não bloquear o usuário
+    return false; // Falha real: API vai retornar 503 e o usuário vê "Falha ao enviar código"
   }
 }
