@@ -43,12 +43,17 @@ router.post('/register/email', async (req: Request, res: Response) => {
   const code = randomCode();
   setVerificationCode(normalized, code);
   console.log('[auth] Enviando código para o email introduzido pelo utilizador:', normalized);
-  const sent = await sendVerificationCode(normalized, code);
-  if (!sent) {
-    res.status(503).json({ error: 'Falha ao enviar código por email. Verifique as configurações SMTP do domínio.' });
-    return;
-  }
-  res.json({ ok: true, message: 'Código enviado para o email' });
+  // Envio de email em background para não travar a UI em ambientes lentos (ex.: Railway + SMTP)
+  sendVerificationCode(normalized, code)
+    .then((sent) => {
+      if (!sent) {
+        console.warn('[auth] Falha ao enviar código por email (verifique SMTP do domínio).');
+      }
+    })
+    .catch((err) => {
+      console.error('[auth] Erro ao enviar código por email:', err);
+    });
+  res.json({ ok: true, message: 'Código gerado; se o email não chegar em alguns minutos, tente novamente.' });
 });
 
 // 2. Verificação de código e criação de conta
@@ -136,12 +141,17 @@ router.post('/login/send-code', async (req: Request, res: Response) => {
   const code = randomCode();
   setVerificationCode(normalized, code);
   console.log('[auth] Enviando código de login para o email introduzido:', normalized);
-  const sent = await sendVerificationCode(normalized, code);
-  if (!sent) {
-    res.status(503).json({ error: 'Falha ao enviar código. Verifique as configurações SMTP do domínio.' });
-    return;
-  }
-  res.json({ ok: true, message: 'Código enviado' });
+  // Envio de email em background para evitar demora excessiva na resposta
+  sendVerificationCode(normalized, code)
+    .then((sent) => {
+      if (!sent) {
+        console.warn('[auth] Falha ao enviar código de login por email (verifique SMTP do domínio).');
+      }
+    })
+    .catch((err) => {
+      console.error('[auth] Erro ao enviar código de login por email:', err);
+    });
+  res.json({ ok: true, message: 'Código de login gerado; verifique seu email em instantes.' });
 });
 
 export default router;
