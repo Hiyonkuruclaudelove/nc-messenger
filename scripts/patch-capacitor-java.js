@@ -2,9 +2,15 @@
  * Corrige JavaVersion.VERSION_21 para VERSION_11 no Capacitor,
  * para compatibilidade com AGP 7.2.2 e Gradle 7.4 (Android Studio antigo).
  * Roda após npm install (postinstall) e após cap sync.
+ * No Railway/servidor (sem pasta android) não faz nada para evitar erros de build.
  */
 const fs = require('fs');
 const path = require('path');
+
+const root = path.join(__dirname, '..');
+if (process.env.RAILWAY_ENVIRONMENT || process.env.CI || !fs.existsSync(path.join(root, 'android'))) {
+  process.exit(0);
+}
 
 function patchFile(filePath, label) {
   if (!fs.existsSync(filePath)) return;
@@ -15,8 +21,6 @@ function patchFile(filePath, label) {
     console.log('patch-capacitor-java: ' + label + ' ajustado para Java 11.');
   }
 }
-
-const root = path.join(__dirname, '..');
 
 patchFile(
   path.join(root, 'node_modules', '@capacitor', 'android', 'capacitor', 'build.gradle'),
