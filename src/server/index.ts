@@ -43,12 +43,13 @@ console.log('\n🚀 NC - Servidor de Mensagens Instantâneas\n');
 
 const PORT = parseInt(process.env.PORT ?? '3000', 10);
 
-// Inicializar banco
+// Inicializar banco (em produção falhar aqui evita SIGTERM obscuro no Railway)
 try {
   getDb(); // cria pasta data se não existir
   initDb();
 } catch (e) {
   console.error('Erro ao inicializar banco:', e);
+  process.exit(1);
 }
 
 initEmail();

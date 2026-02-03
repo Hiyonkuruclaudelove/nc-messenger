@@ -2,6 +2,10 @@
 
 Este guia explica em detalhes como enviar suas alterações para o repositório, fazer o deploy no Railway e configurar as variáveis VAPID.
 
+## Build no Railway (Dockerfile)
+
+O projeto inclui um **Dockerfile** para o Railway. O Railway usa-o automaticamente e compila o **better-sqlite3** no ambiente Linux, evitando erros como `npm error path /app`, `SIGTERM` ou "invalid ELF header". Basta fazer push do código (incluindo `Dockerfile` e `.dockerignore`); não é preciso ativar nada no painel.
+
 ---
 
 ## Parte 1: Enviar as alterações para o repositório (Git)

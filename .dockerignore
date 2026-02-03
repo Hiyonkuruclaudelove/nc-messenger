@@ -1,0 +1,18 @@
+# Evitar copiar node_modules e ficheiros desnecessários
+# O Railway compila better-sqlite3 no Linux; binários do Windows falham
+node_modules
+npm-debug.log
+.env
+.env.*
+!.env.example
+dist
+.git
+.gitignore
+*.md
+android
+*.apk
+*.bat
+frontend-php
+scripts
+*.zip
+.DS_Store
