@@ -1,0 +1,56 @@
+================================================================================
+  ONDE ENCONTRAR O nc-messenger.apk NO SEU PC
+  E ONDE COLOCAR NO HOSTINGER
+================================================================================
+
+---- PARTE 1: ONDE ENCONTRAR O FICHEIRO NO SEU PC ----
+
+O ficheiro chama-se nc-messenger.apk. Pode vir de um destes sítios:
+
+OPÇÃO A - Depois de fazer build no Android Studio
+   Caminho completo no seu computador:
+   C:\xampp\htdocs\NcApk\android\app\build\outputs\apk\debug\app-debug.apk
+
+   O ficheiro vem com o nome "app-debug.apk".
+   RENOMEIE para: nc-messenger.apk
+   (Clique com o botão direito > Renomear)
+
+OPÇÃO B - Depois de executar copiar-apk.bat
+   Na pasta do projeto NcApk, execute:  copiar-apk.bat
+   O ficheiro fica em:
+   C:\xampp\htdocs\NcApk\public\apk\nc-messenger.apk
+   (já com o nome certo)
+
+Como abrir essa pasta no PC:
+  - Abra o Explorador de Ficheiros (Windows).
+  - Cole na barra de endereço: C:\xampp\htdocs\NcApk\android\app\build\outputs\apk\debug
+  - Ou: C:\xampp\htdocs\NcApk\public\apk
+  - O ficheiro que quer é o .apk (renomeie para nc-messenger.apk se for app-debug.apk).
+
+
+---- PARTE 2: ONDE COLOCAR NO HOSTINGER ----
+
+No Hostinger, o nc-messenger.apk deve ficar NA MESMA PASTA que o ficheiro
+nc_messenger_download.php.
+
+Exemplo:
+  Se na Hostinger você colocou a página em:
+    public_html/nc/claude/frontend/
+
+  Então nessa MESMA pasta deve ter:
+    public_html/nc/claude/frontend/nc_messenger_download.php
+    public_html/nc/claude/frontend/nc-messenger.apk
+
+Passos no painel Hostinger:
+  1. Entrar em "Gestor de Ficheiros" (File Manager).
+  2. Navegar até à pasta onde está o nc_messenger_download.php
+     (ex.: public_html > nc > claude > frontend).
+  3. Clicar em "Upload" / "Enviar".
+  4. Escolher o ficheiro nc-messenger.apk do seu PC.
+  5. Confirmar. O ficheiro deve aparecer na mesma lista que o .php.
+
+Resumo:
+  - No PC: o .apk está em android\...\app-debug.apk (renomear) ou em public\apk\nc-messenger.apk.
+  - No Hostinger: coloque o nc-messenger.apk na MESMA pasta do nc_messenger_download.php.
+
+================================================================================

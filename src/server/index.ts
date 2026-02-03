@@ -74,10 +74,24 @@ app.get('/api/health', (_req, res) => {
 
 // Cliente web
 const clientPath = path.join(__dirname, '..', '..', 'public');
+const apkPath = path.join(clientPath, 'apk', 'nc-messenger.apk');
+
 app.use(express.static(clientPath));
 app.get('/', (_req, res) => res.sendFile(path.join(clientPath, 'index.html')));
 app.get('/login', (_req, res) => res.sendFile(path.join(clientPath, 'index.html')));
 app.get('/chat*', (_req, res) => res.sendFile(path.join(clientPath, 'index.html')));
+
+// Página de download do APK
+app.get('/download', (_req, res) => res.sendFile(path.join(clientPath, 'download.html')));
+app.get('/download/nc-messenger.apk', (req, res) => {
+  if (!fs.existsSync(apkPath)) {
+    res.status(404).type('text/plain').send('APK ainda não gerado. Execute o build do Android (ver ANDROID-BUILD.md).');
+    return;
+  }
+  res.setHeader('Content-Disposition', 'attachment; filename="nc-messenger.apk"');
+  res.setHeader('Content-Type', 'application/vnd.android.package-archive');
+  res.sendFile(apkPath);
+});
 
 const server = http.createServer(app);
 

@@ -1,0 +1,38 @@
+========================================
+  NC MESSENGER - SUBIR NO HOSTINGER
+========================================
+
+O que subir para o Hostinger
+----------------------------
+1. nc_messenger_download.php  (esta página de download)
+2. nc-messenger.apk           (o ficheiro do aplicativo)
+
+Onde arranjar o APK
+-------------------
+- No seu PC: copie de
+  NcApk\android\app\build\outputs\apk\debug\app-debug.apk
+- Renomeie para: nc-messenger.apk
+- (Ou execute copiar-apk.bat na pasta NcApk e depois copie
+  public\apk\nc-messenger.apk para esta pasta frontend-php.)
+
+Passos no Hostinger
+-------------------
+1. Entrar no Gestor de Ficheiros (File Manager).
+2. Ir à pasta do seu site onde quer a página de download
+   (ex.: public_html/nc/claude/frontend/ ou a pasta que já usa).
+3. Enviar (Upload) estes 2 ficheiros para a MESMA pasta:
+   - nc_messenger_download.php
+   - nc-messenger.apk
+4. Se já existir nc_messenger_download.php, substitua pelo novo.
+5. Pronto. Aceda a:
+   https://claudeservices.com/nc/claude/frontend/nc_messenger_download.php
+   (ajuste o caminho ao que usou no passo 2)
+
+Opcional
+--------
+Se quiser mudar o link "Usar na Web (Agora)", edite no topo do
+nc_messenger_download.php a linha:
+  $web_url = 'https://claudeservices.com/nc/';
+e coloque a URL correcta do messenger na web.
+
+========================================

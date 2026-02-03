@@ -290,6 +290,7 @@ $('form-email')?.addEventListener('submit', async (e) => {
   try {
     await api('/auth/register/email', { method: 'POST', body: JSON.stringify({ email }) });
     $('code-email').textContent = email;
+    $('code-email').setAttribute('data-email', email);
     $('input-code').value = '';
     $('input-name').value = '';
     showScreen('screen-code');
@@ -299,6 +300,7 @@ $('form-email')?.addEventListener('submit', async (e) => {
       try {
         await api('/auth/login/send-code', { method: 'POST', body: JSON.stringify({ email }) });
         $('code-email').textContent = email;
+        $('code-email').setAttribute('data-email', email);
         $('input-code').value = '';
         showScreen('screen-code');
         document.body.dataset.flow = 'login';
@@ -475,6 +477,7 @@ $('btn-logout')?.addEventListener('click', () => {
   hide('user-bar');
   showScreen('screen-email');
   $('input-email').value = '';
+  if ($('code-email')) $('code-email').textContent = '';
 });
 
 // --- Recomeçar
@@ -485,6 +488,7 @@ $('btn-restart')?.addEventListener('click', () => {
   $('input-email').value = '';
   $('input-code').value = '';
   $('input-name-reg').value = '';
+  if ($('code-email')) $('code-email').textContent = '';
   showScreen('screen-email');
 });
 
@@ -494,4 +498,5 @@ if (token && user) {
   renderHome();
 } else {
   showScreen('screen-email');
+  if ($('code-email')) $('code-email').textContent = '';
 }

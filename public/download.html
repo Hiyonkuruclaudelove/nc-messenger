@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NC Messenger - Download</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .download-page { max-width: 560px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .download-page h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .download-page .tagline { margin-bottom: 2rem; }
+    .alert-info {
+      background: rgba(72, 187, 120, 0.15);
+      border: 1px solid var(--success);
+      color: #9ae6b4;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .alert-info svg { flex-shrink: 0; margin-top: 0.15rem; }
+    .download-block {
+      background: linear-gradient(135deg, #1e2442 0%, #151932 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+    .download-block h2 { margin: 0 0 1.25rem; font-size: 1.25rem; color: var(--text); }
+    .download-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .download-info-item {
+      background: rgba(102, 126, 234, 0.08);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: center;
+    }
+    .download-info-item svg { color: var(--accent); margin-bottom: 0.5rem; }
+    .download-info-item strong { display: block; color: var(--text); }
+    .download-info-item span { font-size: 0.8rem; color: var(--text-secondary); }
+    .download-buttons { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .download-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-web {
+      background: #fff;
+      color: #1e2442;
+      border: 1px solid var(--border);
+    }
+    .btn-web:hover { background: #e2e8f0; }
+    .btn-apk {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+    .btn-apk:hover { background: var(--accent-hover); }
+    .btn-apk:disabled, .btn-apk.disabled { opacity: 0.7; cursor: not-allowed; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header class="nc-header">
+      <h1>NC Messenger</h1>
+      <p class="tagline">Download</p>
+    </header>
+    <main>
+      <div class="download-page">
+        <div class="alert-info" role="alert">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <div>
+            <strong>APK disponível</strong><br />
+            Baixe o aplicativo e instale no seu Android. Compatível com Android 5.0 ou superior.
+          </div>
+        </div>
+        <div class="download-block">
+          <h2>Baixar Aplicativo</h2>
+          <div class="download-info">
+            <div class="download-info-item">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+              <strong>Android</strong>
+              <span>Compatível com Android 5.0+</span>
+            </div>
+            <div class="download-info-item">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+              <strong id="apk-size">~15 MB</strong>
+              <span>Tamanho do arquivo</span>
+            </div>
+            <div class="download-info-item">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              </svg>
+              <strong>v1.0.0</strong>
+              <span>Versão atual</span>
+            </div>
+          </div>
+          <div class="download-buttons">
+            <a href="/" class="btn-web">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              Usar na Web (Agora)
+            </a>
+            <a href="/download/nc-messenger.apk" id="btn-download-apk" class="btn-apk" download>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Baixar APK
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="nc-footer">
+      <p>NC — XMPP · MMS · Push · Criptografia ponta a ponta</p>
+    </footer>
+  </div>
+  <!-- Botão Baixar APK sempre clicável; se o APK não existir, o servidor devolve mensagem ao clicar -->
+</body>
+</html>

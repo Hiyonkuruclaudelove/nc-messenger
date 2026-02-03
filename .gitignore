@@ -6,3 +6,6 @@ data/
 .env.local
 *.log
 .DS_Store
+# APK e ZIP gerados (não enviar para o Git)
+*.apk
+NcApk-Hostinger.zip

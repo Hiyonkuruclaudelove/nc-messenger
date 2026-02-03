@@ -42,10 +42,10 @@ router.post('/register/email', async (req: Request, res: Response) => {
   }
   const code = randomCode();
   setVerificationCode(normalized, code);
-  console.log('[auth] Enviando código de verificação para:', normalized);
+  console.log('[auth] Enviando código para o email introduzido pelo utilizador:', normalized);
   const sent = await sendVerificationCode(normalized, code);
   if (!sent) {
-    res.status(503).json({ error: 'Falha ao enviar código por email' });
+    res.status(503).json({ error: 'Falha ao enviar código por email. Verifique as configurações SMTP do domínio.' });
     return;
   }
   res.json({ ok: true, message: 'Código enviado para o email' });
@@ -135,10 +135,10 @@ router.post('/login/send-code', async (req: Request, res: Response) => {
   }
   const code = randomCode();
   setVerificationCode(normalized, code);
-  console.log('[auth] Enviando código de login para:', normalized);
+  console.log('[auth] Enviando código de login para o email introduzido:', normalized);
   const sent = await sendVerificationCode(normalized, code);
   if (!sent) {
-    res.status(503).json({ error: 'Falha ao enviar código' });
+    res.status(503).json({ error: 'Falha ao enviar código. Verifique as configurações SMTP do domínio.' });
     return;
   }
   res.json({ ok: true, message: 'Código enviado' });

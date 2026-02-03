@@ -1,0 +1,38 @@
+========================================
+  ENVIAR O PROJETO (GIT BASH) - DEPLOY
+========================================
+
+No terminal Git Bash (MINGW64), execute os comandos NA ORDEM:
+
+1. Ir à pasta do projeto
+   cd /c/xampp/htdocs/NcApk
+
+2. Ver o estado
+   git status
+
+3. Adicionar os ficheiros
+   git add .
+
+4. Fazer commit
+   git commit -m "Atualizar NC: email dominio e config"
+
+5. Enviar para o repositório (GitHub/GitLab)
+   git push origin main
+
+   (Se a sua branch se chama master, use: git push origin master)
+
+
+IMPORTANTE - Senha e .env
+-------------------------
+O ficheiro .env (com a senha Claude180@%) NÃO é enviado pelo Git (está no .gitignore).
+
+Se o NC corre na Railway (ou outro servidor):
+- Depois do push, entre no painel da Railway
+- Vá a Variables e adicione manualmente:
+  NC_SMTP_HOST = smtp.hostinger.com
+  NC_SMTP_PORT = 587
+  NC_SMTP_USER = nc@claudeservices.com
+  NC_SMTP_PASS = Claude180@%
+  NC_EMAIL_FROM = Claude Services <nc@claudeservices.com>
+
+========================================
