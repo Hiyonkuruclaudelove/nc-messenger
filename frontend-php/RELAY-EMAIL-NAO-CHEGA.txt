@@ -1,0 +1,45 @@
+========================================
+  Email ainda não chega – o que fazer
+========================================
+
+1) Ver os logs no Railway
+-------------------------
+Quando você clica em "Continuar" no NC, o servidor tenta enviar pelo relay.
+Railway → projeto → servidor NC → aba Logs.
+
+Procure na hora em que clicou:
+  - "✅ Email enviado com sucesso (relay Hostinger)!"  → o relay enviou; verifique Spam ou atraso.
+  - "❌ Relay falhou: 503" e "error_detail: smtp_auth" → o PHP não autenticou no SMTP (senha errada ou não definida).
+  - "❌ Relay falhou: 403" → o segredo não bate (NC_EMAIL_RELAY_SECRET no Railway tem de ser igual a RELAY_SECRET no PHP).
+  - "❌ Erro relay: fetch failed" ou timeout → o Railway não consegue chamar a URL (confira NC_EMAIL_RELAY_URL).
+
+
+2) Se aparecer smtp_auth nos logs
+---------------------------------
+O script PHP não conseguiu fazer login no SMTP do Hostinger. Faça isto:
+
+A) Abra no Hostinger (ou no seu PC antes de enviar) o ficheiro:
+   enviar_codigo_nc_config.php
+
+B) Na linha OUTLOOK_PASSWORD, coloque a MESMA senha do email nc@claudeservices.com
+   que você usa no recuperar senha (a que está em email_config_outlook.php ou no painel Hostinger).
+
+C) Envie de novo o enviar_codigo_nc_config.php para o Hostinger (substituir o que está lá).
+
+D) Teste outra vez no NC (Continuar) e veja os logs no Railway.
+
+
+3) Se não vir "Enviando via relay" nos logs
+-------------------------------------------
+O Railway não está a usar o relay. Confira nas Variables do serviço NC:
+  NC_EMAIL_RELAY_URL    = https://claudeservices.com/nc/claude/frontend/enviar_codigo_nc.php
+  NC_EMAIL_RELAY_SECRET = (o valor de RELAY-SECRET-GERADO.txt)
+
+Salve e espere o redeploy. Teste de novo.
+
+
+4) Relay OK mas email não aparece
+---------------------------------
+Verifique a pasta Spam do email. Às vezes demora 1–2 minutos.
+
+========================================

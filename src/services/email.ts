@@ -41,6 +41,34 @@ export function initEmail(config?: {
   console.log('✅ SMTP configurado!\n');
 }
 
+/** Envio via relay PHP no Hostinger - usa o mesmo SMTP do recuperar senha (conexão do próprio servidor) */
+async function sendViaRelay(to: string, code: string): Promise<boolean> {
+  const url = process.env.NC_EMAIL_RELAY_URL;
+  const secret = process.env.NC_EMAIL_RELAY_SECRET;
+  if (!url || !secret || url === '') return false;
+  try {
+    console.log(`📧 Enviando via relay (Hostinger) para ${to}...`);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: to, code, secret }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; error_detail?: string };
+    if (res.ok && data.ok) {
+      console.log('✅ Email enviado com sucesso (relay Hostinger)!');
+      return true;
+    }
+    console.error('❌ Relay falhou:', res.status, JSON.stringify(data));
+    if (data.error_detail) {
+      console.error('   error_detail:', data.error_detail, data.error_detail === 'smtp_auth' ? '→ Coloque a senha do nc@ em enviar_codigo_nc_config.php (OUTLOOK_PASSWORD)' : '');
+    }
+    return false;
+  } catch (e: any) {
+    console.error('❌ Erro relay:', e.message);
+    return false;
+  }
+}
+
 /** Envio via API do Resend (HTTPS) - evita ETIMEDOUT do SMTP em ambientes como Railway */
 async function sendViaResendApi(to: string, code: string): Promise<boolean> {
   const apiKey = process.env.NC_RESEND_API_KEY || process.env.NC_SMTP_PASS;
@@ -81,23 +109,26 @@ export async function sendVerificationCode(
   to: string,
   code: string
 ): Promise<boolean> {
-  // SEMPRE mostrar código no terminal (mesmo se enviar email)
-  console.log('\n╔════════════════════════════════════════╗');
-  console.log('║      CÓDIGO DE VERIFICAÇÃO NC          ║');
-  console.log('╠════════════════════════════════════════╣');
-  console.log(`║   Email: ${to.padEnd(30)}║`);
-  console.log(`║   Código: ${code.padEnd(28)}║`);
-  console.log('╚════════════════════════════════════════╝\n');
+  // O código só é entregue por email ao endereço digitado; não é mostrado no terminal.
+  const hasRelay = !!(process.env.NC_EMAIL_RELAY_URL && process.env.NC_EMAIL_RELAY_SECRET);
+  const hasResend = process.env.NC_RESEND_API_KEY?.startsWith('re_') || process.env.NC_SMTP_PASS?.startsWith('re_');
+  const hasSmtp = !!process.env.NC_SMTP_HOST;
 
-  // Modo desenvolvimento: apenas terminal
-  if (!process.env.NC_SMTP_HOST && !process.env.NC_RESEND_API_KEY) {
-    if (process.env.NC_SMTP_PASS === 'COLE_A_SENHA_AQUI') {
-      console.log('ℹ️  Modo DEV: SMTP não configurado. Use o código acima!\n');
-      return true;
-    }
+  if (!hasRelay && !hasResend && !hasSmtp) {
+    console.error('❌ Email não configurado. O código só é enviado por email. Configure NC_EMAIL_RELAY_URL (relay Hostinger) ou NC_RESEND_API_KEY ou SMTP.');
+    return false;
   }
 
-  // 1) Se tiver chave Resend (re_xxx), usar API (HTTPS) - evita ETIMEDOUT do SMTP
+  console.log(`📧 Enviando código por email para ${to}...`);
+
+  // 1) Relay no Hostinger (mesmo SMTP do recuperar senha; Railway chama o PHP por HTTPS)
+  if (process.env.NC_EMAIL_RELAY_URL && process.env.NC_EMAIL_RELAY_SECRET) {
+    const ok = await sendViaRelay(to, code);
+    if (ok) return true;
+    console.log('⚠️  Relay falhou; tentando Resend/SMTP...');
+  }
+
+  // 2) Resend API (re_xxx)
   const apiKey = process.env.NC_RESEND_API_KEY || process.env.NC_SMTP_PASS;
   if (apiKey && String(apiKey).startsWith('re_')) {
     const ok = await sendViaResendApi(to, code);
@@ -105,7 +136,7 @@ export async function sendVerificationCode(
     console.log('⚠️  Resend API falhou; tentando SMTP...');
   }
 
-  // 2) SMTP
+  // 3) SMTP direto (pode falhar no Railway se o provedor bloquear conexão externa)
   if (!transporter) {
     if (process.env.NC_SMTP_HOST) {
       console.log('⚠️  Transporter não inicializado, inicializando...');
@@ -113,9 +144,8 @@ export async function sendVerificationCode(
     }
   }
   if (!transporter) {
-    console.error('❌ Falha ao inicializar transporter');
-    console.log('ℹ️  Use o código mostrado acima!\n');
-    return true;
+    console.error('❌ Falha ao inicializar transporter SMTP');
+    return false;
   }
 
   try {
@@ -138,8 +168,7 @@ export async function sendVerificationCode(
     if (e.code) console.error('   Código:', e.code);
     if (e.response) console.error('   Response:', e.response);
     if (e.command) console.error('   Comando SMTP:', e.command);
-    console.log('\n⚠️  Não foi possível enviar o email.');
-    console.log('ℹ️  Use o código mostrado no terminal acima!\n');
+    console.error('⚠️  Não foi possível enviar o email por SMTP.');
     return false;
   }
 }

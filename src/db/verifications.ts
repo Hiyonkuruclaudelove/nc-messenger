@@ -4,7 +4,7 @@
 
 import { getDb } from './init';
 
-const CODE_EXPIRY_MS = 15 * 60 * 1000; // 15 minutos
+const CODE_EXPIRY_MS = 30 * 60 * 1000; // 30 minutos (tempo para o email chegar)
 
 export function setVerificationCode(email: string, code: string): void {
   const db = getDb();
@@ -24,7 +24,7 @@ export function verifyCode(email: string, code: string): boolean {
     )
     .get(email.toLowerCase()) as { code: string; expires_at: number } | undefined;
   if (!row || row.expires_at < Date.now()) return false;
-  const ok = row.code === code;
+  const ok = row.code === String(code).trim();
   if (ok) {
     db.prepare('DELETE FROM email_verifications WHERE email = ?').run(
       email.toLowerCase()

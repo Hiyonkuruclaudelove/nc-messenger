@@ -43,17 +43,20 @@ router.post('/register/email', async (req: Request, res: Response) => {
   const code = randomCode();
   setVerificationCode(normalized, code);
   console.log('[auth] Enviando código para o email introduzido pelo utilizador:', normalized);
-  // Envio de email em background para não travar a UI em ambientes lentos (ex.: Railway + SMTP)
-  sendVerificationCode(normalized, code)
-    .then((sent) => {
-      if (!sent) {
-        console.warn('[auth] Falha ao enviar código por email (verifique SMTP do domínio).');
-      }
-    })
-    .catch((err) => {
-      console.error('[auth] Erro ao enviar código por email:', err);
-    });
-  res.json({ ok: true, message: 'Código gerado; se o email não chegar em alguns minutos, tente novamente.' });
+  let sent: boolean;
+  try {
+    sent = await sendVerificationCode(normalized, code);
+  } catch (err) {
+    console.error('[auth] Erro ao enviar código por email:', err);
+    res.status(503).json({ error: 'Falha ao enviar código. Tente novamente ou verifique a configuração de email do servidor.' });
+    return;
+  }
+  if (!sent) {
+    console.warn('[auth] Falha ao enviar código por email (verifique SMTP/Resend).');
+    res.status(503).json({ error: 'Falha ao enviar código. O servidor não conseguiu enviar o email. Verifique os logs no Railway ou configure Resend (veja EMAIL-RESEND-RAILWAY.md).' });
+    return;
+  }
+  res.json({ ok: true, message: 'Código gerado; verifique seu email (e a pasta Spam).' });
 });
 
 // 2. Verificação de código e criação de conta
@@ -69,8 +72,9 @@ router.post('/register/verify', (req: Request, res: Response) => {
     res.status(400).json({ error: 'Nome deve ter pelo menos 2 caracteres' });
     return;
   }
-  if (!verifyCode(normalized, String(code))) {
-    res.status(400).json({ error: 'Código inválido ou expirado' });
+  const codeStr = String(code).trim();
+  if (!verifyCode(normalized, codeStr)) {
+    res.status(400).json({ error: 'Código inválido ou expirado. Peça um novo código na tela anterior e use o do email mais recente.' });
     return;
   }
   if (userExists(normalized)) {
@@ -107,8 +111,8 @@ router.post('/login/email', async (req: Request, res: Response) => {
     res.status(404).json({ error: 'Usuário não encontrado' });
     return;
   }
-  if (!verifyCode(normalized, String(code))) {
-    res.status(400).json({ error: 'Código inválido ou expirado' });
+  if (!verifyCode(normalized, String(code).trim())) {
+    res.status(400).json({ error: 'Código inválido ou expirado. Peça um novo código e use o do email mais recente.' });
     return;
   }
   const token = crypto.randomBytes(32).toString('hex');
@@ -141,17 +145,20 @@ router.post('/login/send-code', async (req: Request, res: Response) => {
   const code = randomCode();
   setVerificationCode(normalized, code);
   console.log('[auth] Enviando código de login para o email introduzido:', normalized);
-  // Envio de email em background para evitar demora excessiva na resposta
-  sendVerificationCode(normalized, code)
-    .then((sent) => {
-      if (!sent) {
-        console.warn('[auth] Falha ao enviar código de login por email (verifique SMTP do domínio).');
-      }
-    })
-    .catch((err) => {
-      console.error('[auth] Erro ao enviar código de login por email:', err);
-    });
-  res.json({ ok: true, message: 'Código de login gerado; verifique seu email em instantes.' });
+  let sent: boolean;
+  try {
+    sent = await sendVerificationCode(normalized, code);
+  } catch (err) {
+    console.error('[auth] Erro ao enviar código de login por email:', err);
+    res.status(503).json({ error: 'Falha ao enviar código. Tente novamente ou verifique a configuração de email do servidor.' });
+    return;
+  }
+  if (!sent) {
+    console.warn('[auth] Falha ao enviar código de login por email (verifique SMTP/Resend).');
+    res.status(503).json({ error: 'Falha ao enviar código. O servidor não conseguiu enviar o email. Verifique os logs no Railway ou configure Resend (veja EMAIL-RESEND-RAILWAY.md).' });
+    return;
+  }
+  res.json({ ok: true, message: 'Código de login gerado; verifique seu email (e a pasta Spam).' });
 });
 
 export default router;

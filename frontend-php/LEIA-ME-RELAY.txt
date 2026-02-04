@@ -1,0 +1,33 @@
+========================================
+  RELAY DE EMAIL - Só atualizar arquivos
+========================================
+
+Para o código de verificação chegar por email usando o MESMO SMTP do recuperar senha (Railway continua a ser o servidor).
+
+PASSO 1 - Enviar ficheiros para o Hostinger
+-------------------------------------------
+Envie para a MESMA pasta do nc_messenger_download.php (ex.: public_html/nc/claude/frontend/):
+
+  - enviar_codigo_nc.php
+  - enviar_codigo_nc_config.php
+
+(Se o recuperar senha usa email_config_outlook.php na pasta backend, o script encontra sozinho. Se não, edite enviar_codigo_nc_config.php e descomente/prenecha OUTLOOK_PASSWORD com a senha do nc@claudeservices.com.)
+
+
+PASSO 2 - Variáveis no Railway
+-------------------------------------------
+Railway → projeto → servidor NC → Variables. Adicione:
+
+  NC_EMAIL_RELAY_URL    = https://claudeservices.com/nc/claude/frontend/enviar_codigo_nc.php
+  NC_EMAIL_RELAY_SECRET  = (copie o valor de RELAY-SECRET-GERADO.txt)
+
+(Ajuste a URL ao caminho real onde enviou os ficheiros no passo 1.)
+
+Salve. O Railway faz redeploy.
+
+
+PASSO 3 - Testar
+-------------------------------------------
+Abra o NC (web ou APK), digite o email, clique Continuar. O código deve chegar ao email (e Spam).
+
+========================================

@@ -6,6 +6,7 @@ O que subir para o Hostinger
 ----------------------------
 1. nc_messenger_download.php  (esta página de download)
 2. nc-messenger.apk           (o ficheiro do aplicativo)
+3. enviar_codigo_nc.php       (opcional: relay para envio de código com mesmo SMTP do recuperar senha; veja EMAIL-RELAY-HOSTINGER.md)
 
 Onde arranjar o APK
 -------------------
