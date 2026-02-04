@@ -20,6 +20,7 @@ import userRoutes from '../routes/users';
 import messageRoutes from '../routes/messages';
 import pushRoutes from '../routes/push';
 import mmsRoutes from '../routes/mms';
+import { getAdminStats } from '../db/stats';
 
 // Carregar variáveis de ambiente do arquivo .env
 const envPath = path.join(__dirname, '..', '..', '.env');
@@ -71,6 +72,21 @@ app.use('/api/mms', mmsRoutes);
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, service: 'NC' });
+});
+
+// Estatísticas para o painel admin (protegido por NC_ADMIN_SECRET se definido)
+app.get('/api/admin/stats', (req, res) => {
+  const secret = process.env.NC_ADMIN_SECRET;
+  if (secret && req.query.secret !== secret && req.get('X-Admin-Secret') !== secret) {
+    res.status(403).json({ error: 'Acesso negado' });
+    return;
+  }
+  try {
+    res.json(getAdminStats());
+  } catch (e) {
+    console.error('admin/stats:', e);
+    res.status(500).json({ error: 'Erro ao obter estatísticas' });
+  }
 });
 
 // Cliente web
