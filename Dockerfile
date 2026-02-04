@@ -10,7 +10,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
+# Copiar package e scripts antes do npm ci (postinstall roda scripts/patch-capacitor-java.js)
 COPY package.json package-lock.json ./
+COPY scripts/ scripts/
 RUN npm ci
 
 COPY . .
